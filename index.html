@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>Random Wheel</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <section class="wheel-section" aria-label="随机转盘区域">
+        <div class="wheel-frame">
+          <canvas id="wheelCanvas"></canvas>
+          <div class="pointer" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <section class="controls-section" aria-label="转盘控制区域">
+        <div class="controls-grid">
+          <div class="control-group">
+            <label class="field-label" for="wheelSelect">转盘选择</label>
+            <select id="wheelSelect"></select>
+          </div>
+
+          <div class="button-row">
+            <button id="newWheelButton" type="button">新建转盘</button>
+            <button id="deleteWheelButton" type="button">删除转盘</button>
+            <button id="renameWheelButton" type="button">重命名</button>
+          </div>
+
+          <div class="button-row">
+            <button id="importButton" type="button">导入</button>
+            <button id="exportButton" type="button">导出</button>
+          </div>
+
+          <div class="button-row">
+            <button id="startButton" class="primary" type="button">开始</button>
+            <button id="eliminateButton" type="button">淘汰</button>
+            <button id="restoreButton" type="button">恢复全部</button>
+            <button id="historyButton" type="button">历史记录</button>
+          </div>
+
+          <div class="control-group">
+            <label class="field-label" for="wheelEditor">编辑选项</label>
+            <textarea id="wheelEditor" spellcheck="false"></textarea>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <input id="importFile" type="file" accept="application/json" hidden />
+
+    <div id="resultModal" class="modal" aria-hidden="true">
+      <div class="modal-card">
+        <h2>结果</h2>
+        <p id="resultText" class="result-text"></p>
+        <div class="modal-actions">
+          <button id="keepButton" type="button">保留</button>
+          <button id="eliminateModalButton" type="button">淘汰</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="historyModal" class="modal" aria-hidden="true">
+      <div class="modal-card history-card">
+        <div class="modal-title-row">
+          <h2>历史记录</h2>
+          <button id="clearHistoryButton" type="button">清空历史</button>
+        </div>
+        <ul id="historyList" class="history-list"></ul>
+      </div>
+    </div>
+
+    <div id="statusMessage" class="status-message" aria-live="polite"></div>
+
+    <script src="storage.js"></script>
+    <script src="wheel.js"></script>
+    <script src="animation.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

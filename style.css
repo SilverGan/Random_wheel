@@ -1,0 +1,231 @@
+:root {
+  color-scheme: light;
+  --border-color: #000;
+  --bg-color: #fff;
+  --text-color: #000;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+button,
+select,
+textarea {
+  font: inherit;
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.wheel-section {
+  flex: 0 0 75%;
+  display: grid;
+  place-items: center;
+  padding: 16px 24px 8px;
+  min-height: 0;
+}
+
+.wheel-frame {
+  position: relative;
+  width: min(78vw, 78vh);
+  max-width: 860px;
+  aspect-ratio: 1;
+}
+
+#wheelCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
+}
+
+.pointer {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-top: 24px solid var(--border-color);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.controls-section {
+  flex: 1;
+  min-height: 0;
+  padding: 8px 24px 24px;
+  overflow: auto;
+}
+
+.controls-grid {
+  display: grid;
+  gap: 12px;
+  height: 100%;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+select,
+textarea,
+button {
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+select,
+textarea {
+  padding: 10px 12px;
+}
+
+textarea {
+  min-height: 180px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+button {
+  padding: 9px 12px;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+
+button:hover {
+  background: #f2f2f2;
+}
+
+button.primary {
+  background: #000;
+  color: #fff;
+}
+
+button.primary:hover {
+  background: #111;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.88);
+  z-index: 20;
+  padding: 16px;
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-card {
+  width: min(92vw, 400px);
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.history-card {
+  width: min(92vw, 460px);
+  max-height: 80vh;
+  overflow: auto;
+}
+
+.modal-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.result-text {
+  font-size: 1.2rem;
+  min-height: 2.3rem;
+}
+
+.history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.history-list li {
+  padding: 8px 0;
+  border-top: 1px solid var(--border-color);
+}
+
+.status-message {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
+  padding: 8px 12px;
+  display: none;
+  z-index: 30;
+}
+
+.status-message.show {
+  display: block;
+}
+
+@media (max-width: 860px) {
+  .wheel-section {
+    flex-basis: 70%;
+  }
+
+  .controls-section {
+    padding: 8px 16px 16px;
+  }
+}
