@@ -35,20 +35,22 @@ textarea {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  padding: 14px;
+  gap: 12px;
 }
 
 .wheel-section {
-  flex: 0 0 75%;
+  flex: 0 0 72%;
   display: grid;
   place-items: center;
-  padding: 16px 24px 8px;
+  padding: 8px 8px 12px;
   min-height: 0;
 }
 
 .wheel-frame {
   position: relative;
-  width: min(78vw, 78vh);
-  max-width: 860px;
+  width: min(76vw, 76vh);
+  max-width: 780px;
   aspect-ratio: 1;
 }
 
@@ -76,7 +78,7 @@ textarea {
 .controls-section {
   flex: 1;
   min-height: 0;
-  padding: 8px 24px 24px;
+  padding: 4px 6px 8px;
   overflow: auto;
 }
 
@@ -84,6 +86,7 @@ textarea {
   display: grid;
   gap: 12px;
   height: 100%;
+  align-content: start;
 }
 
 .control-group {
@@ -93,7 +96,7 @@ textarea {
 }
 
 .field-label {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
 }
 
@@ -107,13 +110,16 @@ button {
 
 select,
 textarea {
-  padding: 10px 12px;
+  padding: 8px 10px;
 }
 
 textarea {
-  min-height: 180px;
+  min-height: 150px;
+  max-width: 100%;
   resize: vertical;
-  line-height: 1.5;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .button-row {
@@ -122,23 +128,51 @@ textarea {
   gap: 8px;
 }
 
+.primary-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 button {
-  padding: 9px 12px;
+  padding: 8px 10px;
   cursor: pointer;
-  transition: background-color 120ms ease;
+  transition: background-color 120ms ease, transform 120ms ease;
 }
 
 button:hover {
   background: #f2f2f2;
 }
 
-button.primary {
-  background: #000;
-  color: #fff;
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
-button.primary:hover {
+button.primary-action {
+  flex: 1 1 0;
+  min-width: 92px;
+  padding: 10px 14px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  background: #000;
+  color: #fff;
+  border-radius: 999px;
+}
+
+button.primary-action:hover {
   background: #111;
+}
+
+button.secondary-action {
+  padding: 6px 8px;
+  font-size: 0.84rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.compact-row {
+  gap: 6px;
 }
 
 .modal {
@@ -179,10 +213,22 @@ button.primary:hover {
   gap: 8px;
 }
 
+.modal-title-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
+}
+
+.modal-actions .primary-action {
+  flex: 0 0 auto;
+  min-width: 88px;
 }
 
 .result-text {
@@ -221,11 +267,30 @@ button.primary:hover {
 }
 
 @media (max-width: 860px) {
+  .app-shell {
+    padding: 8px;
+    gap: 10px;
+  }
+
   .wheel-section {
-    flex-basis: 70%;
+    flex-basis: 66%;
+    padding: 6px 2px 8px;
+  }
+
+  .wheel-frame {
+    width: min(82vw, 78vh);
   }
 
   .controls-section {
-    padding: 8px 16px 16px;
+    padding: 2px 2px 6px;
+  }
+
+  .primary-actions {
+    gap: 6px;
+  }
+
+  button.primary-action {
+    min-width: 0;
+    padding: 9px 12px;
   }
 }

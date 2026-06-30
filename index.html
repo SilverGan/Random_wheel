@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <title>Random Wheel</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=20260630-2" />
   </head>
   <body>
     <div class="app-shell">
@@ -23,22 +23,18 @@
             <select id="wheelSelect"></select>
           </div>
 
-          <div class="button-row">
-            <button id="newWheelButton" type="button">新建转盘</button>
-            <button id="deleteWheelButton" type="button">删除转盘</button>
-            <button id="renameWheelButton" type="button">重命名</button>
+          <div class="primary-actions">
+            <button id="startButton" class="primary-action" type="button">开始</button>
+            <button id="eliminateButton" class="primary-action" type="button" disabled>淘汰</button>
+            <button id="keepButton" class="primary-action" type="button" disabled>保留</button>
           </div>
 
-          <div class="button-row">
-            <button id="importButton" type="button">导入</button>
-            <button id="exportButton" type="button">导出</button>
-          </div>
-
-          <div class="button-row">
-            <button id="startButton" class="primary" type="button">开始</button>
-            <button id="eliminateButton" type="button">淘汰</button>
-            <button id="restoreButton" type="button">恢复全部</button>
-            <button id="historyButton" type="button">历史记录</button>
+          <div class="button-row compact-row">
+            <button id="newWheelButton" class="secondary-action" type="button">新建转盘</button>
+            <button id="deleteWheelButton" class="secondary-action" type="button">删除转盘</button>
+            <button id="renameWheelButton" class="secondary-action" type="button">重命名</button>
+            <button id="restoreButton" class="secondary-action" type="button">恢复全部</button>
+            <button id="historyButton" class="secondary-action" type="button">历史记录</button>
           </div>
 
           <div class="control-group">
@@ -49,15 +45,13 @@
       </section>
     </div>
 
-    <input id="importFile" type="file" accept="application/json" hidden />
-
     <div id="resultModal" class="modal" aria-hidden="true">
       <div class="modal-card">
         <h2>结果</h2>
         <p id="resultText" class="result-text"></p>
         <div class="modal-actions">
-          <button id="keepButton" type="button">保留</button>
-          <button id="eliminateModalButton" type="button">淘汰</button>
+          <button id="keepModalButton" class="primary-action" type="button">保留</button>
+          <button id="eliminateModalButton" class="primary-action" type="button">淘汰</button>
         </div>
       </div>
     </div>
@@ -66,7 +60,10 @@
       <div class="modal-card history-card">
         <div class="modal-title-row">
           <h2>历史记录</h2>
-          <button id="clearHistoryButton" type="button">清空历史</button>
+          <div class="modal-title-actions">
+            <button id="clearHistoryButton" type="button">清空历史</button>
+            <button id="closeHistoryButton" type="button">关闭</button>
+          </div>
         </div>
         <ul id="historyList" class="history-list"></ul>
       </div>
@@ -74,9 +71,9 @@
 
     <div id="statusMessage" class="status-message" aria-live="polite"></div>
 
-    <script src="storage.js"></script>
-    <script src="wheel.js"></script>
-    <script src="animation.js"></script>
-    <script src="script.js"></script>
+    <script src="storage.js?v=20260630-2"></script>
+    <script src="wheel.js?v=20260630-2"></script>
+    <script src="animation.js?v=20260630-2"></script>
+    <script src="script.js?v=20260630-2"></script>
   </body>
 </html>

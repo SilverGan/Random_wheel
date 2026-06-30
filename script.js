@@ -20,16 +20,15 @@
     newWheelButton: document.getElementById('newWheelButton'),
     deleteWheelButton: document.getElementById('deleteWheelButton'),
     renameWheelButton: document.getElementById('renameWheelButton'),
-    importButton: document.getElementById('importButton'),
-    exportButton: document.getElementById('exportButton'),
-    importFile: document.getElementById('importFile'),
     resultModal: document.getElementById('resultModal'),
     resultText: document.getElementById('resultText'),
     keepButton: document.getElementById('keepButton'),
+    keepModalButton: document.getElementById('keepModalButton'),
     eliminateModalButton: document.getElementById('eliminateModalButton'),
     historyModal: document.getElementById('historyModal'),
     historyList: document.getElementById('historyList'),
     clearHistoryButton: document.getElementById('clearHistoryButton'),
+    closeHistoryButton: document.getElementById('closeHistoryButton'),
     statusMessage: document.getElementById('statusMessage')
   };
 
@@ -38,6 +37,7 @@
     renderWheelSelector();
     syncEditorFromActiveWheel();
     renderWheel();
+    updateActionButtonsState();
     bindEvents();
     window.addEventListener('resize', renderWheel);
   }
@@ -52,12 +52,13 @@
     elements.newWheelButton.addEventListener('click', createNewWheel);
     elements.deleteWheelButton.addEventListener('click', deleteCurrentWheel);
     elements.renameWheelButton.addEventListener('click', renameCurrentWheel);
-    elements.importButton.addEventListener('click', () => elements.importFile.click());
-    elements.exportButton.addEventListener('click', exportData);
-    elements.importFile.addEventListener('change', handleImport);
     elements.keepButton.addEventListener('click', closeResultModal);
+    elements.keepModalButton.addEventListener('click', closeResultModal);
     elements.eliminateModalButton.addEventListener('click', eliminateCurrentResultFromModal);
     elements.clearHistoryButton.addEventListener('click', clearHistory);
+    elements.closeHistoryButton.addEventListener('click', closeHistoryModal);
+    elements.resultModal.addEventListener('click', handleModalBackdropClick);
+    elements.historyModal.addEventListener('click', handleModalBackdropClick);
 
     document.addEventListener('keydown', handleKeydown);
   }
@@ -79,7 +80,13 @@
     }
 
     if (event.key === 'Escape') {
-      cancelSpin();
+      if (elements.historyModal.classList.contains('open')) {
+        closeHistoryModal();
+      } else if (elements.resultModal.classList.contains('open')) {
+        closeResultModal();
+      } else {
+        cancelSpin();
+      }
     }
 
     if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z') {
@@ -208,12 +215,24 @@
     elements.resultText.textContent = result;
     elements.resultModal.classList.add('open');
     elements.resultModal.setAttribute('aria-hidden', 'false');
+    updateActionButtonsState();
+  }
+
+  function closeModal(modal) {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  function handleModalBackdropClick(event) {
+    if (event.target === event.currentTarget) {
+      closeModal(event.currentTarget);
+    }
   }
 
   function closeResultModal() {
-    elements.resultModal.classList.remove('open');
-    elements.resultModal.setAttribute('aria-hidden', 'true');
+    closeModal(elements.resultModal);
     state.currentResult = null;
+    updateActionButtonsState();
   }
 
   function eliminateCurrentResultFromModal() {
@@ -237,6 +256,7 @@
     closeResultModal();
     showStatus(`已淘汰：${state.currentResult}`);
     state.currentResult = null;
+    updateActionButtonsState();
   }
 
   function handleEliminateCurrentResult() {
@@ -332,39 +352,10 @@
     showStatus('已重命名');
   }
 
-  function exportData() {
-    const blob = new Blob([RandomWheelStorage.exportState(state.appState)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'random-wheel.json';
-    link.click();
-    URL.revokeObjectURL(url);
-    showStatus('已导出');
-  }
-
-  function handleImport(event) {
-    const file = event.target.files && event.target.files[0];
-    if (!file) {
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = function () {
-      try {
-        const parsed = JSON.parse(reader.result);
-        const normalized = RandomWheelStorage.normalizeState(parsed);
-        state.appState = normalized;
-        persistState();
-        renderWheelSelector();
-        syncEditorFromActiveWheel();
-        renderWheel();
-        showStatus('已导入并恢复全部数据');
-      } catch (error) {
-        showStatus('导入失败：文件格式错误');
-      }
-    };
-    reader.readAsText(file);
-    event.target.value = '';
+  function updateActionButtonsState() {
+    const hasResult = Boolean(state.currentResult);
+    elements.eliminateButton.disabled = !hasResult;
+    elements.keepButton.disabled = !hasResult;
   }
 
   function openHistoryModal() {
@@ -386,6 +377,10 @@
     }
     elements.historyModal.classList.add('open');
     elements.historyModal.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeHistoryModal() {
+    closeModal(elements.historyModal);
   }
 
   function clearHistory() {

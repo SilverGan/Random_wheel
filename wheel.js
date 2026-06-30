@@ -77,14 +77,24 @@
       context.textBaseline = 'middle';
       context.fillStyle = '#000';
 
-      let fontSize = Math.max(12, Math.min(24, radius * 0.09));
+      const segmentCount = Math.max(1, items.length);
+      const angleRatio = Math.min(1, segmentAngle / (Math.PI / 4));
+      const baseFontSize = Math.max(10, Math.min(24, radius * 0.11));
+      let fontSize = Math.max(10, baseFontSize * (0.8 + angleRatio * 0.35));
+      let displayText = String(item || '');
+      const maxTextWidth = radius * 0.58;
+
+      if (displayText.length > 10) {
+        displayText = `${displayText.slice(0, 8)}…`;
+      }
+
       context.font = `${fontSize}px sans-serif`;
-      while (context.measureText(item).width > radius * 0.6 && fontSize > 10) {
+      while (context.measureText(displayText).width > maxTextWidth && fontSize > 10) {
         fontSize -= 1;
         context.font = `${fontSize}px sans-serif`;
       }
 
-      context.fillText(item, 0, 0);
+      context.fillText(displayText, 0, 0);
       context.restore();
     });
 
