@@ -167,27 +167,47 @@
 
     state.isSpinning = true;
     const startRotation = state.lastRotation;
-    const spins = 8 + Math.random() * 4;
+    const spins = 2 + Math.random() * 2; // 2-4 turns for quicker spin
     const fullCircle = Math.PI * 2;
+    // 1.0 - 2.0 秒随机时长，通常 1.2-1.8s 感受较好
+    const duration = 1200 + Math.random() * 800;
     const targetRotation = startRotation + spins * fullCircle + Math.random() * fullCircle;
-    const segmentAngle = fullCircle / wheel.items.length;
-    const normalizedRotation = ((targetRotation + Math.PI / 2) % fullCircle + fullCircle) % fullCircle;
-    const selectedIndex = Math.floor(normalizedRotation / segmentAngle) % wheel.items.length;
-    const result = wheel.items[selectedIndex % wheel.items.length];
 
-    state.currentResult = result;
     state.currentAnimation = RandomWheelAnimation.startSpin({
       startRotation,
       targetRotation,
-      duration: 3000,
+      duration,
       onFrame(rotation) {
         state.lastRotation = rotation;
         renderWheel();
       },
       onComplete() {
         state.isSpinning = false;
-        state.lastRotation = targetRotation;
+        // 使用实际结束角度作为最终角度（onFrame 已更新 state.lastRotation）
+        const finalRotation = state.lastRotation;
+        state.lastRotation = finalRotation;
         renderWheel();
+
+        // 以动画结束时的角度计算真正的选中项，保证指针与结果一致
+        const segmentAngle = fullCircle / wheel.items.length;
+        // 以 -finalRotation 作为参考，计算指针（顶部）所对应的扇区索引
+        const normalizedRotation = ((-finalRotation % fullCircle) + fullCircle) % fullCircle;
+        // 将角度映射到最近的扇区中心，避免边界舍入问题
+        const rawIndex = normalizedRotation / segmentAngle;
+        const nearestIndex = Math.floor(rawIndex + 0.5) % wheel.items.length;
+        const selectedIndex = ((nearestIndex % wheel.items.length) + wheel.items.length) % wheel.items.length;
+        const result = wheel.items[selectedIndex];
+
+        if (typeof result === 'undefined' || result === null) {
+          // 结果不确定时给出提示，不打开淘汰弹窗，避免显示 null
+          state.isSpinning = false;
+          state.currentResult = null;
+          showStatus('未能确定结果，请重试');
+          persistState();
+          return;
+        }
+
+        state.currentResult = result;
         openResultModal(result);
         if (wheel.history) {
           wheel.history.unshift(result);
@@ -244,8 +264,10 @@
       return;
     }
 
-    wheel.lastEliminated = state.currentResult;
-    wheel.items = wheel.items.filter((item) => item !== state.currentResult);
+    const result = state.currentResult; // 保留局部副本，避免 closeResultModal 清空 state
+
+    wheel.lastEliminated = result;
+    wheel.items = wheel.items.filter((item) => item !== result);
     if (!wheel.items.length) {
       wheel.items = wheel.originalItems.slice();
       showStatus('当前轮盘已空，已恢复原始选项');
@@ -254,7 +276,7 @@
     syncEditorFromActiveWheel();
     renderWheel();
     closeResultModal();
-    showStatus(`已淘汰：${state.currentResult}`);
+    showStatus(`已淘汰：${result}`);
     state.currentResult = null;
     updateActionButtonsState();
   }

@@ -35,17 +35,9 @@
   }
 
   function getCurve(progress) {
-    if (progress < 0.3) {
-      const eased = progress / 0.3;
-      return eased * eased;
-    }
-
-    if (progress < 0.85) {
-      return 1;
-    }
-
-    const eased = (progress - 0.85) / 0.15;
-    return 1 - eased * eased;
+    // 使用平滑的 ease-out 三次方缓动，避免长时间匀速或跳跃导致的不顺滑感
+    const t = Math.max(0, Math.min(1, progress));
+    return 1 - Math.pow(1 - t, 3); // easeOutCubic
   }
 
   window.RandomWheelAnimation = {
